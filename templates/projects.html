@@ -1,0 +1,38 @@
+{% include "layout.html" %}
+
+{% block body %}
+
+<div class="text-center">
+    <h2>Projects</h2>
+</div>
+
+<div class="project" style="margin-left: 1.8em; margin-right: 1.8em">
+
+    {% for project in projects %}
+    <h3>{{ project.project_title }}</h3>
+    <p>{{ project.project_content }}</p>
+        {% if session.logged_in %}
+        <a href="/delete/{{ project.id }}">(delete)</a>
+        {% endif%}
+    {% endfor %}
+
+    {% if session.logged_in %}
+    <form action="{{ url_for('projects') }}" method="post">
+        <div class="add-project">
+
+            <dl>
+                <dt><h3>Add project</h3>
+                <dd><input type="text" name="title">
+                <dd><textarea name="content" cols="60" rows="10"></textarea>
+                <dd><input type="submit">
+            </dl>
+
+        </div>
+
+    </form>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

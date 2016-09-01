@@ -1,0 +1,33 @@
+Jinja delimiters:
+
+{% ... %} for Statements
+{{ ... }} for Expressions to print to the template output
+{# ... #} for Comments not included in the template output
+#  ... ## for Line Statements
+
+to pass a var from python into the html do
+{{ my_string }}
+
+nice idea: for your root index, never use a render template directly but rather create a layout template which can be inherited
+by all subtemplates which are actually directly used
+
+Dependencies:
+flask-bootstrap
+
+Todo:
+
+Contact:
+    IP address and date should also be stored in the database along with message content.
+    Anti-spam for message system??
+    Way to delete messages
+
+Admin:
+    Store IP address of everyone who visits the site (unique) and use that to generate a hitcounter
+    Display ip address and date of every message that gets sent.
+
+Projects:
+    Finish database side
+
+Gallery:
+    Make gallery look better, and add some sort of description to each image
+    Optimize image display so that the full image is not downloaded each time it is accessed

@@ -1,0 +1,15 @@
+{% include "layout.html" %}
+
+<div class="text-center" style="margin-left:1.0em; margin-right:1.0em">
+    {% if error %}<p class="list-group-item list-group-item-danger"><strong>Error:</strong> {{ error }}{% endif %}
+
+<h2>Contact</h2>
+    <form action="{{ url_for('contact') }}" method="post" class="add-entry">
+        <dl>
+            <dd>Got something to say? Let your voice be heard!
+            <dd><br>
+            <dd><textarea rows="15" cols="70" name="message_data" class="form-control"></textarea>
+            <dd><input type="submit" class="btn btn-default" style="margin-top:0.5em">
+        </dl>
+    </form>
+</div>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% extends "bootstrap/base.html" %}
+<title>Welcome to this terrible site</title>
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='style.css') }}">
+
+<a href="{{ url_for('index') }}"><h1>Some web app</h1></a>
+
+{% block navbar %}
+
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">PersonalSite</a>
+    </div>
+    <ul class="nav navbar-nav">
+        <!--li class="active"></li>-->
+
+      <li {% if request.path == "/gallery" %} class="active" {% endif %}><a href="{{ url_for('gallery') }}">Gallery</a></li>
+      <li {% if request.path == "/projects" %} class="active" {% endif %}><a href="{{ url_for('projects')}}">Projects</a></li>
+      <li {% if request.path == "/contact" %} class="active" {% endif %}><a href="{{ url_for('contact') }}">Contact</a></li>
+
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+         {% if session.logged_in %}
+        <li><a href="{{ url_for('admin')}}">Control Panel</a> </li>
+        <li><a href="{{ url_for('logout') }}">Log Out</a></li>
+        {% endif %}
+    </ul>
+  </div>
+</nav>
+
+{% for message in get_flashed_messages() %}
+<li class="list-group-item list-group-item-info">{{ message }} </li>
+{% endfor %}
+
+{% endblock %}
+

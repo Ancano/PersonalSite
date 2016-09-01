@@ -1,0 +1,41 @@
+{% include "layout.html" %}
+
+{% block body %}
+<div class="control-panel" style="margin: 0.8em">
+    {% if error %}<p class="list-group-item list-group-item-danger"><strong>Error:</strong> {{ error }}{% endif %}
+    <div class="text-center">
+    {% if not session.logged_in %}
+
+    <h2>Log in</h2>
+    <form action="{{ url_for('admin') }}" method="post">
+        <dl>
+            <dt>Username: <input type="text" name="username">
+            <dt><br>
+            <dt>Password: <input type="password" name="password">
+            <dt><br>
+            <dt><input type="submit" class="btn btn-primary">
+        </dl>
+    </form>
+    {% else %}
+
+        <h2>Admin Control Panel</h2>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Messages</div>
+        <div class="panel-body">
+            {% for entry in entries %}
+            <p>{{ entry.content }}<a href="#"> (delete)</a><span class="post-metadata" style="font-size: 85%">    192.168.1.1 || <span class="text-info">1/1/16</span></span></p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Visitor Data</div>
+        <div class="panel-body"></div>
+    </div>
+    {% endif %}
+
+
+</div>
+{% endblock %}
