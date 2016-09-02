@@ -4,6 +4,7 @@ import sqlite3
 from flask import Flask, flash, render_template, g, request, redirect, url_for, session
 from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
+from datetime import datetime
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -51,21 +52,23 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
-
     return render_template('index.html')
 
+#Note that deleting images is a pain. You must delete the image from the uploads folder and also reset the database to remove any entry to it.
+#Otherwise captions will be messed up.
+#To reset the database run sqlite3 mysite.db < schema.sql
 @app.route('/gallery',methods=['GET','POST'])
 def gallery():
     error = None
     existing_files = []
+
     #List containing all files in the directory
     file_list = os.listdir(app.config['UPLOAD_FOLDER'])
 
-    for file in file_list:
-        path = os.path.join("uploads/",file)
-        existing_files.append(path)
+    db = get_db()
+    images = db.execute('SELECT * FROM captions').fetchall()
 
     if request.method == "POST":
         if 'file' not in request.files:
@@ -73,11 +76,16 @@ def gallery():
             return redirect(request.url)
 
         file = request.files['file']
+
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename))
         flash('File uploaded successfully.')
+
+        db.execute('INSERT INTO captions (caption,imagepath) VALUES (?,?)',[request.form['image_caption'], "/static/uploads/" + request.files['file'].filename])
+        db.commit()
+
         return redirect(request.url)
 
-    return render_template('gallery.html',existing_files=existing_files)
+    return render_template('gallery.html',images=images)
 
 @app.route('/projects', methods=['GET','POST'])
 def projects():
@@ -126,8 +134,10 @@ def contact():
     if request.method == "POST":
         #init_db()
         if request.form['message_data'] != "":
+            current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             db = get_db()
-            db.execute('INSERT INTO admin_messages (content) VALUES (?)',[request.form['message_data']])
+            db.execute('INSERT INTO admin_messages (content,ipaddress,currenttime) VALUES (?,?,?)',[request.form['message_data'],request.remote_addr,current_time])
+            print request.remote_addr
             db.commit()
             flash("Thanks for your submission!")
         else:
@@ -140,7 +150,7 @@ def admin():
     error = None
     #Get all messages that users sent
     db = get_db()
-    cur = db.execute('SELECT content FROM admin_messages')
+    cur = db.execute('SELECT * FROM admin_messages')
     entries = cur.fetchall()
 
     if request.method == "POST":
@@ -163,5 +173,6 @@ def logout():
 
 
 if __name__ == '__main__':
+    app.debug=True
     app.run(host='0.0.0.0')
     #app.run()

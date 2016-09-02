@@ -25,13 +25,13 @@
         <div class="panel-heading">Messages</div>
         <div class="panel-body">
             {% for entry in entries %}
-            <p>{{ entry.content }}<a href="#"> (delete)</a><span class="post-metadata" style="font-size: 85%">    192.168.1.1 || <span class="text-info">1/1/16</span></span></p>
+            <p>{{ entry.content }}<a href="#"> (delete)</a><span class="post-metadata" style="font-size: 85%"> {{ entry.ipaddress }} | <span class="text-info">{{ entry.currenttime }}</span></span></p>
             {% endfor %}
         </div>
     </div>
 
     <div class="panel panel-default">
-        <div class="panel-heading">Visitor Data</div>
+        <div class="panel-heading">Analytics</div>
         <div class="panel-body"></div>
     </div>
     {% endif %}

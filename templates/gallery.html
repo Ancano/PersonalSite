@@ -2,23 +2,30 @@
 {% block body %}
     <div class="text-center" style="padding-left:0.8em">
         <h2>Gallery</h2>
+        <div class="row">
+        {% for image in images %}
 
-        {% for file in existing_files %}
+            <div class="col-lg-3 col-md-3 col-xs-4 thumb">
+                <div class="thumbnail">
+                    <a href="{{ image.imagepath }}"><img src="{{ image.imagepath }}"></a>
+                </div>
+                <div class="caption">
 
-            <div class="col-lg-3 col-md-4 col-xs-4 thumb">
-                        <a href="{{ url_for('static',filename=file ) }}"><img src="{{ url_for('static',filename=file ) }}" class=img-thumbnail" width="256" height="256" style="margin: 0.5em;"></a>
-
-                    <p>here's a caption</p>
+                    <p>{{ image.caption }}</p>
+                </div>
             </div>
         {% endfor %}
-
+        </div>
         {% if session.logged_in %}
-        <p>Upload image</p>
+        <!--Admin Image Upload controls-->
+        <h3>Upload image</h3>
         <form action="{{ url_for('gallery') }}" method="post"  enctype="multipart/form-data">
+            <span>Image caption: </span><input type="text" name="image_caption">
             <label class="btn btn-default btn-file">
                 Browse<input type="file" name="file" style="display: none;">
             </label>
             <input type="submit" class="btn btn-primary">
+
         </form>
         {% endif %}
 
